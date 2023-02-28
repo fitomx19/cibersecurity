@@ -1,16 +1,23 @@
 const express = require("express");
+var cors = require('cors')
 
 const app = express();
 
 require("./db");
 
-app.use(express.urlencoded({ extended: true })); //solo quiero sus datos
-app.use(express.json());
+//permitir cors
+app.use(cors());
+app.use(express.json()); //this is the build in express body-parser 
+app.use(                //this mean we don't need to use body-parser anymore
+  express.urlencoded({
+    extended: true,
+  })
+); 
 
 var indexRouter = require("./routes/rutas");
 
 app.use("/", indexRouter);
 
-app.listen(3000, () =>
-  console.log('Example app listening on port 3000!'),
+app.listen(4000, () =>
+  console.log('Example app listening on port 4000!'),
 );
