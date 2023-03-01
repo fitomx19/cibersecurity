@@ -1,7 +1,9 @@
 //creamos el controlador de rutas
 // Path: backend\controller\rutasController.js
 
+const { ObjectId } = require("mongodb");
 const Usuario = require("../models/Usuario");
+var mongoose = require('mongoose');
 
 
 exports.home = async (req, res) => {
@@ -34,11 +36,14 @@ exports.registrar = async(req,res) => {
         if(correo_existente?.length > 0){
             res.status(230).json({mensaje : "Ya existe un usuario con este correo"});
         }else{
+           
             var personData = new Usuario ({
                 nombre:nombre,
-                perfil:perfil,
+                login:perfil,
                 contrasena:password,
                 correo: correo,
+                perfil: 1,
+                activo: true
               })
 
             const resultado = await personData.save(personData);
@@ -56,8 +61,8 @@ exports.iniciarSesion = async(req,res) => {
 
     let {perfil,password} = req.body;
 
-    const resultado = await Usuario.find({perfil:perfil,contrasena:password})
-    const usuario = await Usuario.find({perfil:perfil})
+    const resultado = await Usuario.find({login:perfil,contrasena:password})
+    const usuario = await Usuario.find({login:perfil})
     console.log(resultado)
     console.log(usuario)
     if(resultado){

@@ -5,7 +5,7 @@ const Usuario = Schema({
     login : String,
     contrasena : String,
     nombre : String,
-    perfil : String,
+    perfil : Number,
     correo : String,
     activo : Boolean
 });

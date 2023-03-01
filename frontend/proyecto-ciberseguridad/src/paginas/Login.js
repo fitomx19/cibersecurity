@@ -1,11 +1,12 @@
+import React,{useContext,Component} from 'react';
 
-import styled from "styled-components";
 import { useState } from 'react';
 import { API } from '../config';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { BrowserRouter  as Router, Routes, Route} from 'react-router-dom';
 import { Link , useNavigate} from "react-router-dom";
+
 
 function Login() {
   const [nombre, setNombre] = useState("");
@@ -152,7 +153,7 @@ function Login() {
                 <label>Correo:</label>
                 <div className="InputForm">
                   <input
-                    type="text"
+                    type="email"
                     required
                     value={correo}
                     onChange={(e) => setCorreo(e.target.value)}
@@ -184,7 +185,7 @@ function Login() {
           </div>
           <div className="col-lg-6">
             <form onSubmit={iniciarSesion}>
-            <label>Correo:</label>
+            <label>Nombre Usuario:</label>
               <div className="InputForm">
                 
                 <div className="InputForm">
