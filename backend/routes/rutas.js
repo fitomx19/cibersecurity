@@ -8,5 +8,7 @@ router.get('/', rutasController.home)
 
 router.post('/registrar', rutasController.registrar)
 
+router.post('/iniciar-sesion', rutasController.iniciarSesion)
+
 
 module.exports = router;
