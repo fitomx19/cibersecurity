@@ -44,16 +44,18 @@ function Login() {
         headers: {
           'Content-Type': 'application/json'
         }
-      });
-      console.log(res.data)
-      if(res.data.mensaje){
-        setAlerta(res.data.mensaje);
-      }else{
-        setAlerta("");
-        setMensaje("Usuario encontrado correctamente");
-        //mandar a la pagina de home
-        history('/home')
-      }
+        
+      }).catch((error) => {
+        console.log(error.response.data.mensaje)
+        setAlerta(error.response.data.mensaje);
+      }).then((response) => {
+        if(response){
+          setAlerta("");
+          setMensaje("Usuario encontrado correctamente");
+          //mandar a la pagina de home
+          history('/home')
+        }
+      } );
 
     } catch (error) {
       console.log(error)

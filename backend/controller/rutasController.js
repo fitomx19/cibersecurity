@@ -52,17 +52,23 @@ exports.registrar = async(req,res) => {
 }
 
 exports.iniciarSesion = async(req,res) => {
-    console.log(req.body)
+    //console.log(req.body)
 
     let {perfil,password} = req.body;
 
     const resultado = await Usuario.find({perfil:perfil,contrasena:password})
+    const usuario = await Usuario.find({perfil:perfil})
+    console.log(resultado)
+    console.log(usuario)
     if(resultado){
         if(resultado.length > 0){
             res.status(200).json(resultado);
+        }else if(usuario.length > 0){
+            res.status(400).json({mensaje : "Contraseña incorrecta"});
         }else{
             res.status(404).json({mensaje : "No se encontraron resultados"});
         }
+    
     }else{
         res.status(404).json({mensaje : "No se encontraron resultados"});
     }
