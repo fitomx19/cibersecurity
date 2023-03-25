@@ -3,6 +3,8 @@
 
 const { ObjectId } = require("mongodb");
 const Usuario = require("../models/Usuario");
+const InicioSesion = require("../models/InicioSesion");
+
 var mongoose = require('mongoose');
 
 
@@ -58,7 +60,7 @@ exports.registrar = async(req,res) => {
 
 exports.iniciarSesion = async(req,res) => {
     //console.log(req.body)
-
+    let exitoso = false;
     let {perfil,password} = req.body;
 
     const resultado = await Usuario.find({login:perfil,contrasena:password})
@@ -67,12 +69,26 @@ exports.iniciarSesion = async(req,res) => {
     console.log(usuario)
     if(resultado){
         if(resultado.length > 0){
+            req.session.nombre = resultado[0].nombre;
             res.status(200).json(resultado);
+        exitoso = true;
         }else if(usuario.length > 0){
             res.status(400).json({mensaje : "Contraseña incorrecta"});
         }else{
             res.status(404).json({mensaje : "No se encontraron resultados"});
         }
+
+        //guardar en la base de datos el inicio de sesion
+
+
+        const inicio = new InicioSesion({
+            login:perfil,
+            correo:usuario[0].correo,
+            fecha: new Date(),
+            exitoso: exitoso
+        })
+
+        const resultadInicio = await inicio.save(inicio);
     
     }else{
         res.status(404).json({mensaje : "No se encontraron resultados"});
