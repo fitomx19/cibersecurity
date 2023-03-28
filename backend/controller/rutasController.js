@@ -4,9 +4,9 @@
 const { ObjectId } = require("mongodb");
 const Usuario = require("../models/Usuario");
 const InicioSesion = require("../models/InicioSesion");
-
 var mongoose = require('mongoose');
-
+const jwt = require('jsonwebtoken');
+require('dotenv').config({ path: "variables.env" });
 
 exports.home = async (req, res) => {
     const resultado = await Usuario.find();
@@ -59,7 +59,7 @@ exports.registrar = async(req,res) => {
 }
 
 exports.iniciarSesion = async(req,res) => {
-    //console.log(req.body)
+    console.log(req.body)
     let exitoso = false;
     let {perfil,password} = req.body;
 
@@ -67,10 +67,23 @@ exports.iniciarSesion = async(req,res) => {
     const usuario = await Usuario.find({login:perfil})
     console.log(resultado)
     console.log(usuario)
+
+    const payload = {
+        usuario: {
+            id: usuario._id
+        }
+    };
+
+
     if(resultado){
         if(resultado.length > 0){
-            req.session.nombre = resultado[0].nombre;
-            res.status(200).json(resultado);
+            jwt.sign(payload, process.env.SECRETA, {
+                expiresIn: 3600 // 1 hora
+            }, (error, token) => {
+                if(error) throw error;
+                // Mensaje de confirmación
+                res.json({ token  });
+            });
         exitoso = true;
         }else if(usuario.length > 0){
             res.status(400).json({mensaje : "Contraseña incorrecta"});
@@ -83,7 +96,7 @@ exports.iniciarSesion = async(req,res) => {
 
         const inicio = new InicioSesion({
             login:perfil,
-            correo:usuario[0].correo,
+            correo:usuario[0]?.correo,
             fecha: new Date(),
             exitoso: exitoso
         })
