@@ -2,7 +2,7 @@ const express = require("express");
 var cors = require('cors')
 const https = require('https')
 const fs = require('fs')
-
+const session = require('express-session')
 const app = express();
 const httpsOptions = {
   key: fs.readFileSync('./cert.key'),
@@ -19,6 +19,14 @@ app.use(                //this mean we don't need to use body-parser anymore
   })
 ); 
 
+app.use(session({
+  secret: 'mysecretkey',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 10000 // 30 segundos en milisegundos
+  }
+}));
 
 
 var indexRouter = require("./routes/rutas");

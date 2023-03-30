@@ -18,6 +18,16 @@
   padding-top: 0.5rem;
     width: 100%;
 }
+
+.row {
+  display: table;
+}
+
+[class*="col-"] {
+  float: none;
+  display: table-cell;
+  vertical-align: top;
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
