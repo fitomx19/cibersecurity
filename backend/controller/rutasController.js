@@ -98,13 +98,14 @@ exports.iniciarSesion = async (req, res) => {
 
   if (resultado) {
     //obtener el campo password de resultado
+    
     if (resultado.length > 0) {
-      //console.log("este es->" , resultado[0].contrasena)
+      console.log("encontro el correo")
       const passCorrecto = await bcryptjs.compare(
         password,
         resultado[0].contrasena
       );
-
+      console.log(passCorrecto)
       if (passCorrecto) {
         req.session.user = { username: resultado[0].nombre };
         console.log(resultado2);
@@ -119,6 +120,15 @@ exports.iniciarSesion = async (req, res) => {
             );
             console.log("entro correctamente");
             res.status(201).json({ username: resultado[0].correo });
+          }else{
+            //login normal
+            console.log("entro correctamente")
+            var personData = new InicioSesion({
+              login: perfil,
+              exitoso: true,
+            });
+            const resultado4 = await personData.save(personData);
+            res.status(200).json({ username: resultado[0].correo });
           }
         } else {
           //insertar si fue exitoso el inicio de sesion
@@ -127,7 +137,7 @@ exports.iniciarSesion = async (req, res) => {
             exitoso: true,
           });
           const resultado4 = await personData.save(personData);
-          res.status(200).json({ username: resultado[0].nombre });
+          res.status(200).json({ username: resultado[0].correo });
         }
       } else {
         var personData = new InicioSesion({
@@ -191,12 +201,20 @@ exports.recuperarContrasena = async (req, res) => {
 
     //guardar la contraseña en el historial
     const resultado3 = await HistorialContras.updateOne(
-      { correo: correo },
+      { login: correo },
       { $push: { contrasenas: contrasena } },
+      
+    );
+    
+    const resultado4 = await HistorialContras.updateOne(
+      { login: correo },
       { $set: { actualizado: true } }
     );
+    
 
     console.log(resultado2);
+    console.log(resultado3)
+    console.log(resultado4)
   } else {
     console.log("No se encontraron resultados");
   }
