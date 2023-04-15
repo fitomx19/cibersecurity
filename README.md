@@ -6,4 +6,5 @@
 
 Proyecto desarrollado con Node.js y React
 
-- Primer enbtregable 1 marzo -> Login Funcional
+- Primer entregable 1 marzo -> Login Funcional
+- Segundo entregable 28 marzo -> Funciones de seguridad básicas.

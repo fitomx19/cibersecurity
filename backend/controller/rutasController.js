@@ -42,6 +42,21 @@ exports.registrar = async (req, res) => {
       res.status(400).json({ mensaje: "Las contraseñas no coinciden" });
       return;
     }
+
+    // Expresión regular para validar la contraseña
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).+$/;
+
+    // Validar la contraseña
+    const isValidPassword = passwordRegex.test(password);
+
+    if (!isValidPassword) {
+      res.status(400).json({
+        mensaje:
+          "La contraseña debe tener al menos una letra mayúscula, una minúscula y un carácter especial",
+      });
+      return;
+    }
+
     //cifrar la contraseña
     const salt = await bcryptjs.genSalt(15);
     password = await bcryptjs.hash(password, salt);
